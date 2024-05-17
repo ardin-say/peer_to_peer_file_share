@@ -382,54 +382,6 @@
       }
     }
 
-    function conn_data() {
-      conn.on("data", function (data) {
-        if (data.emit_no == "s2") {
-          downloadArray.push(data.chache);
-          var downloaded_size = downloadArray.length;
-          downloaded_size = downloaded_size * chache;
-          document.getElementById(file_uid).innerHTML =
-            Math.trunc((downloaded_size / file_size) * 100) + "%";
-          conn.send({
-            emit_no: "r1",
-          });
-        } else {
-          if (data.emit_no == "r1") {
-            readNext();
-          } else {
-            if (data.emit_no == 0) {
-              var html1 = `<div class="other_msg">${data.msg}<p style="color: green;"></p></div>`;
-              var middle_box = document.querySelector(".middle_box");
-              middle_box.innerHTML = middle_box.innerHTML + html1;
-              middle_box.scrollTop = middle_box.scrollHeight;
-            } else {
-              if (data.emit_no == "s1") {
-                document.getElementById("myFileInput").disabled = true;
-                downloadArray = [];
-                file_size = data.file_size;
-                file_name = data.file_name;
-                file_uid = data.uid;
-                var html1 = `<div class="other_msg">${file_name}<p style="color: green;" id="${file_uid}"></p></div>`;
-                var middle_box = document.querySelector(".middle_box");
-                middle_box.innerHTML = middle_box.innerHTML + html1;
-                middle_box.scrollTop = middle_box.scrollHeight;
-                conn.send({
-                  emit_no: "r1",
-                });
-              }
-
-              if (data.emit_no == "s3") {
-                document.getElementById(file_uid).innerHTML = "100%";
-                download(new Blob(downloadArray), data.filename);
-                document.getElementById(file_uid).innerHTML = "Downloaded";
-                document.getElementById("myFileInput").disabled = false;
-              }
-            }
-          }
-        }
-      });
-    }
-
     document.querySelector(".share_screen").style.display = "none";
     document.querySelector(".offline_screen").style.display = "none";
 
@@ -599,32 +551,6 @@
         uid = Math.floor(Math.random() * 999999);
       }
       reader = new FileReader();
-
-      reader.onload = function (event) {
-        if (offset < file_size) {
-          arrayBuffer = new Uint8Array(reader.result);
-          document.getElementById(uid).innerHTML = Math.trunc(((file_size - (file_size - offset)) / file_size) * 100) + "%";
-          offset += chache;
-          conn.send({
-            emit_no: "s2",
-            chache: arrayBuffer,
-          });
-          // console.log(arrayBuffer);
-        } else {
-          document.getElementById(uid).innerHTML = "UPLOADED";
-          conn.send({
-            filename: file.name,
-            filetype: file.type,
-            emit_no: "s3",
-          });
-          i1++;
-          if(i1 < numOfSelectedFiles){
-            readNext1 = readInChunks(files.target.files[i1]);
-          }else{
-            document.getElementById("myFileInput").disabled = false;
-          }
-        }
-      };
       var html1 = `<div class="my_msg">${file.name}<p style="color: green;" id="${uid}"></p></div>`;
       var middle_box = document.querySelector(".middle_box");
       middle_box.innerHTML = middle_box.innerHTML + html1;
