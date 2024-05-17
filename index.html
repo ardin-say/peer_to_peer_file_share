@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.1/download.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      height: 100%;
+      background: #f5f5f5;
+      font-family: "Courier New", monospace;
+    }
+
+    .top_div {
+      background: #5c00a8 !important;
+      height: 15%;
+      display: flex;
+      align-items: center;
+    }
+
+    .top_div p {
+      text-transform: uppercase !important;
+      padding-left: 120px;
+      font-size: 25px !important;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bolder !important;
+    }
+
+    .main {
+      width: 100%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .join_screen {
+      width: 100%;
+      height: 100%;
+      margin-top: -40px;
+      max-width: 500px;
+      background: #fff;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+    }
+
+    .upper_screen {
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .us_div2 {
+      margin-top: 20px;
+    }
+
+    #my_peer_id_p {
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    #my_short_id_p {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .lower_screen {
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .ls_div2 {
+      margin-top: 20px;
+    }
+
+    .ls_div3 {
+      margin-top: 20px;
+    }
+
+    #f_peer_id_inp {
+      height: 2rem;
+      padding-left: 5px;
+      border: 2px solid black;
+      border-radius: 5px;
+    }
+
+    #connect_btn {
+      width: 4rem;
+      height: 2rem;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #connect_btn:hover {
+      cursor: pointer;
+    }
+
+    #scan_btn {
+      width: 6rem;
+      height: 2rem;
+      background: #17a2b8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #scan_btn:hover {
+      cursor: pointer;
+    }
+
+    .qrcode {
+      margin: auto;
+    }
+
+    .offline_screen {
+      padding-top: 100px;
+    }
+
+    .share_screen {
+      width: 100%;
+      height: 100%;
+      margin-top: -40px;
+      max-width: 500px;
+      background: #fff;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+    }
+
+    .upper_box {
+      width: 100%;
+      height: 12%;
+      background: black;
+      display: flex;
+      align-items: center;
+      border-radius: 5px;
+    }
+
+    #f_peer_id_p {
+      color: white;
+      padding-left: 10px;
+    }
+
+    .circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: green;
+    }
+
+    .middle_box {
+      width: 100%;
+      height: 84%;
+      padding-bottom: 40px;
+      overflow-y: auto;
+    }
+
+    .lower_box {
+      width: 100%;
+      height: 8%;
+      background: black;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .ss_lb_div1 {
+      width: 15%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #choose_file_btn:hover {
+      cursor: pointer;
+    }
+
+    #msg_inp {
+      width: 70%;
+      height: 90%;
+      padding-left: 5px;
+    }
+
+    .ss_lb_div2 {
+      width: 15%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #send_btn:hover {
+      cursor: pointer;
+    }
+
+    .my_msg {
+      width: fit-content;
+      max-width: 90%;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: 5px;
+      padding: 12px;
+      background: black;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .other_msg {
+      width: fit-content;
+      max-width: 90%;
+      margin-top: 5px;
+      margin-left: 5px;
+      margin-right: auto;
+      padding: 12px;
+      background: black;
+      color: white;
+      border-radius: 5px;
+    }
+
+    #reader {
+      background-color: #ddd;
+      height: 100%;
+      width: 100%;
+      display: none;
+    }
+
+    .footer {
+      background-color: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 10%;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .top_div {
+        height: 9%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main {
+        flex-grow: 1;
+        border-bottom: 1px solid white;
+      }
+
+      .upper_box {
+        border-radius: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+
+      .footer {
+        height: 8%;
+        font-size: 12px;
+        border-top: 2px solid white;
+      }
+
+      .join_screen {
+        margin-top: 0;
+      }
+
+      .share_screen {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+
+<body ononline="check_online_or_offline()" onoffline="check_online_or_offline()">
+  <!-- As a heading -->
+  <div class="top_div">
+    <p>SHARE.io</p>
+  </div>
+
+  <div class="main">
+    <div class="join_screen" id="join_screen">
+      <div class="upper_screen">
+        <center>
+          <b>Device ID : </b>
+          <p id="my_peer_id_p">Loading ...</p>
+        </center>
+        <div class="us_div1">
+          <center>
+            <div id="qrcode"></div>
+          </center>
+        </div>
+        <div class="us_div2">
+          <center>
+            <b>Short ID : </b>
+            <p id="my_short_id_p">Loading ...</p>
+          </center>
+        </div>
+      </div>
+      <hr />
+      <div class="lower_screen">
+        <div class="ls_div1">
+          <center>
+            <input type="text" id="f_peer_id_inp" placeholder="Other's Short ID or Device ID" />
+            <button id="connect_btn">Connect</button>
+          </center>
+        </div>
+        <div class="ls_div2">
+          <center>
+            <h3>OR</h3>
+          </center>
+        </div>
+        <div class="ls_div3">
+          <center>
+            <button id="scan_btn">Scan Now</button>
+          </center>
+        </div>
+      </div>
+    </div>
+    <div class="share_screen">
+      <div class="upper_box">
+        <p id="f_peer_id_p">Other's ID : 453695ba</p>
+        &nbsp&nbsp
+        <div class="circle"></div>
+      </div>
+      <div class="middle_box"></div>
+      <div class="lower_box">
+        <div class="ss_lb_div1">
+          <img src="i1.png" id="choose_file_btn" />
+          <input type="file" id="myFileInput" hidden multiple/>
+        </div>
+        <textarea id="msg_inp" placeholder="Message"></textarea>
+        <div class="ss_lb_div2">
+          <img src="i2.png" id="send_btn" />
+        </div>
+      </div>
+      <br>
+    </div>
+    <div class="offline_screen">
+      <h1 style="color: red;">YOUR ARE OFFLINE !!!</h1>
+      <button onclick="check_online_or_offline()">Refresh</button>
+    </div>
+    <div id="reader"></div>
+  </div>
+  <br>
+  <div class="footer">
+    <footer>
+      <p>&copy; 2024 . All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script type="text/javascript">
+
+    function check_online_or_offline() {
+      if (window.navigator.onLine) {
+        location.reload();
+      } else {
+        document.querySelector(".join_screen").style.display = "none";
+        document.querySelector(".share_screen").style.display = "none";
+        document.querySelector(".offline_screen").style.display = "";
+      }
+    }
+
+    function conn_data() {
+      conn.on("data", function (data) {
+        if (data.emit_no == "s2") {
+          downloadArray.push(data.chache);
+          var downloaded_size = downloadArray.length;
+          downloaded_size = downloaded_size * chache;
+          document.getElementById(file_uid).innerHTML =
+            Math.trunc((downloaded_size / file_size) * 100) + "%";
+          conn.send({
+            emit_no: "r1",
+          });
+        } else {
+          if (data.emit_no == "r1") {
+            readNext();
+          } else {
+            if (data.emit_no == 0) {
+              var html1 = `<div class="other_msg">${data.msg}<p style="color: green;"></p></div>`;
+              var middle_box = document.querySelector(".middle_box");
+              middle_box.innerHTML = middle_box.innerHTML + html1;
+              middle_box.scrollTop = middle_box.scrollHeight;
+            } else {
+              if (data.emit_no == "s1") {
+                document.getElementById("myFileInput").disabled = true;
+                downloadArray = [];
+                file_size = data.file_size;
+                file_name = data.file_name;
+                file_uid = data.uid;
+                var html1 = `<div class="other_msg">${file_name}<p style="color: green;" id="${file_uid}"></p></div>`;
+                var middle_box = document.querySelector(".middle_box");
+                middle_box.innerHTML = middle_box.innerHTML + html1;
+                middle_box.scrollTop = middle_box.scrollHeight;
+                conn.send({
+                  emit_no: "r1",
+                });
+              }
+
+              if (data.emit_no == "s3") {
+                document.getElementById(file_uid).innerHTML = "100%";
+                download(new Blob(downloadArray), data.filename);
+                document.getElementById(file_uid).innerHTML = "Downloaded";
+                document.getElementById("myFileInput").disabled = false;
+              }
+            }
+          }
+        }
+      });
+    }
+
+    document.querySelector(".share_screen").style.display = "none";
+    document.querySelector(".offline_screen").style.display = "none";
+
+    var f_peer_id = null;
+    peer = new Peer();
+
+    // when connection is created, handle the event -
+    peer.on("open", function (id) {
+      console.log("Connected to Signaling Server ID : " + id);
+      var qrcode = new QRCode("qrcode", {
+        text: id,
+        width: 145,
+        height: 145,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+
+      var my_peer_id_p = document.querySelector("#my_peer_id_p");
+      my_peer_id_p.innerHTML = id;
+      var my_short_id_p = document.querySelector("#my_short_id_p");
+      $.ajax({
+        type: "POST",
+        url: "add_short_id.php",
+        data: { my_peer_id: id },
+        success: function (data) {
+          my_short_id_p.innerHTML = data;
+        },
+      });
+      peer.on("connection", function (c) {
+        conn = c;
+        f_peer_id = conn.peer;
+        join_share_screen(f_peer_id);
+        join_share_screen(f_peer_id);
+        join_share_screen(f_peer_id);
+        conn_data();
+        conn.on('close', function () {
+          check_online_or_offline();
+          console.log('Connection closed.');
+        });
+      });
+    });
+
+    peer.on("disconnected", function () {
+      check_online_or_offline();
+    });
+
+    document
+      .getElementById("connect_btn")
+      .addEventListener("click", function () {
+        var f_peer_id_inp = document.getElementById("f_peer_id_inp").value;
+        if (f_peer_id_inp.length == 6) {
+          $.ajax({
+            type: "POST",
+            url: "connect.php",
+            data: { f_short_id: f_peer_id_inp },
+            success: function (data) {
+              conn = peer.connect(data);
+
+              conn.on("open", function () {
+                f_peer_id = f_peer_id_inp;
+                join_share_screen(f_peer_id);
+                join_share_screen(f_peer_id);
+                join_share_screen(f_peer_id);
+                conn_data();
+              });
+              conn.on('close', function () {
+                check_online_or_offline();
+                console.log('Connection closed.');
+              });
+            },
+          });
+        } else {
+          if (f_peer_id_inp == "") {
+            alert("Please enter other's device id");
+          } else {
+            conn = peer.connect(f_peer_id_inp);
+
+            conn.on("open", function () {
+              f_peer_id = f_peer_id_inp;
+              join_share_screen(f_peer_id);
+              join_share_screen(f_peer_id);
+              join_share_screen(f_peer_id);
+              conn_data();
+            });
+            conn.on('close', function () {
+              check_online_or_offline();
+              console.log('Connection closed.');
+            });
+          }
+        }
+      });
+
+    document
+      .getElementById("scan_btn")
+      .addEventListener("click", function () {
+        document.getElementById("join_screen").style.display = "none";
+        document.getElementById("reader").style.display = "block";
+        function onScanSuccess(decodedText, decodedResult) {
+          html5QrcodeScanner
+            .clear()
+            .then((ignore) => { })
+            .catch((err) => { });
+          document.getElementById("reader").style.display = "none";
+          conn = peer.connect(decodedText);
+
+          conn.on("open", function () {
+            f_peer_id = decodedText;
+            join_share_screen(f_peer_id);
+            join_share_screen(f_peer_id);
+            join_share_screen(f_peer_id);
+            conn_data();
+          });
+          conn.on('close', function () {
+            check_online_or_offline();
+            console.log('Connection closed.');
+          });
+        }
+
+        function onScanFailure(error) {
+          console.warn(`Code scan error = ${error}`);
+        }
+
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+          "reader",
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+            /* verbose= */ false
+        );
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      });
+
+    function join_share_screen(f_peer_id) {
+      f_peer_id1 = f_peer_id.split("-");
+      f_peer_id2 = f_peer_id1[0];
+      document.querySelector(".join_screen").style.display = "none";
+      document.querySelector(".share_screen").style.display = "block";
+      document.getElementById("f_peer_id_p").innerHTML =
+        "other's ID : " + f_peer_id2;
+    }
+
+    document
+      .getElementById("choose_file_btn")
+      .addEventListener("click", function () {
+        document.getElementById("myFileInput").click();
+      });
+
+    var downloadArray = [];
+    var uids = [];
+    var uid = null;
+    var file_uid = null;
+    var file_size = null;
+    let arrayBuffer = null;
+    var file1 = null;
+    var offset = 0;
+    let chache = 1000000; // 512KB
+    var reader = "";
+    var i1 = 0;
+
+    function readInChunks(file) {
+      file1 = file;
+      document.getElementById("myFileInput").disabled = true;
+      console.log(file.size);
+      offset = 0;
+      file_size = file.size;
+      uid = Math.floor(Math.random() * 999999);
+      while (uids.includes(uid)) {
+        uid = Math.floor(Math.random() * 999999);
+      }
+      reader = new FileReader();
+
+      reader.onload = function (event) {
+        if (offset < file_size) {
+          arrayBuffer = new Uint8Array(reader.result);
+          document.getElementById(uid).innerHTML = Math.trunc(((file_size - (file_size - offset)) / file_size) * 100) + "%";
+          offset += chache;
+          conn.send({
+            emit_no: "s2",
+            chache: arrayBuffer,
+          });
+          // console.log(arrayBuffer);
+        } else {
+          document.getElementById(uid).innerHTML = "UPLOADED";
+          conn.send({
+            filename: file.name,
+            filetype: file.type,
+            emit_no: "s3",
+          });
+          i1++;
+          if(i1 < numOfSelectedFiles){
+            readNext1 = readInChunks(files.target.files[i1]);
+          }else{
+            document.getElementById("myFileInput").disabled = false;
+          }
+        }
+      };
+      var html1 = `<div class="my_msg">${file.name}<p style="color: green;" id="${uid}"></p></div>`;
+      var middle_box = document.querySelector(".middle_box");
+      middle_box.innerHTML = middle_box.innerHTML + html1;
+      middle_box.scrollTop = middle_box.scrollHeight;
+      uids.push(uid);
+      document.getElementById("myFileInput").disabled = true;
+      conn.send({
+        emit_no: "s1",
+        file_size: file_size,
+        file_name: file.name,
+        uid: uid,
+      });
+    }
+
+    function readNext() {
+      let slice = file1.slice(offset, offset + chache);
+      reader.readAsArrayBuffer(slice);
+    }
+
+    let input = document.getElementById('myFileInput');
+    var selectedFiles = "";
+    var numOfSelectedFiles = 0;
+    var files = "";
+    var readNext1 = "";
+    input.addEventListener('click', function (e) {
+      input.value = "";
+    });
+    input.addEventListener('change', function (e) {
+      i1 = 0;
+      selectedFiles = input.files;
+      numOfSelectedFiles = selectedFiles.length;
+      files = e;
+      if (numOfSelectedFiles === 0) {
+        alert("Please select at least one file to upload.");
+      }else{
+        readNext1 = readInChunks(files.target.files[i1]);
+      }
+    }, false);
+
+    document
+      .getElementById("send_btn")
+      .addEventListener("click", function () {
+        var msg_inp = document.querySelector("#msg_inp");
+        if (msg_inp.value != "") {
+          if (conn && conn.open) {
+            conn.send({
+              emit_no: 0,
+              msg: msg_inp.value,
+            });
+            var html1 = `<div class="my_msg">${msg_inp.value}<p style="color: green;"></p></div>`;
+            var middle_box = document.querySelector(".middle_box");
+            middle_box.innerHTML = middle_box.innerHTML + html1;
+            middle_box.scrollTop = middle_box.scrollHeight;
+            msg_inp.value = "";
+          }
+        }
+      });
+
+    document.querySelector(".circle").addEventListener("click", function () {
+      peer.reconnect();
+      conn = peer.connect(f_peer_id);
+      alert("reconnected");
+    });
+  </script>
+</body>
+
+</html>
